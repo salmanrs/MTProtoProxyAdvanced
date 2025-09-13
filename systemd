@@ -1,0 +1,20 @@
+[Unit]
+Description=MTProto Proxy Service
+After=network.target
+Wants=network.target
+
+[Service]
+Type=simple
+User=nobody
+Group=nobody
+WorkingDirectory=/usr/local/mtproto-proxy
+ExecStart=/usr/local/mtproto-proxy/mtproto-proxy -u nobody -p 8888 -H 443 -S auto --aes-pwd /usr/local/mtproto-proxy/config/proxy.conf
+ExecReload=/bin/kill -HUP $MAINPID
+Restart=on-failure
+RestartSec=5
+KillMode=mixed
+TimeoutStopSec=5
+LimitNOFILE=1048576
+
+[Install]
+WantedBy=multi-user.target
