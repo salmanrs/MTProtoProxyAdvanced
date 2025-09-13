@@ -1,0 +1,56 @@
+#!/bin/bash
+# Firewall setup for MTProto Proxy
+
+set -e
+
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+NC='\033[0m'
+
+print_info() {
+    echo -e "${GREEN}[INFO]${NC} $1"
+}
+
+print_error() {
+    echo -e "${RED}[ERROR]${NC} $1"
+}
+
+setup_centos_firewall() {
+    print_info "Setting up CentOS firewall..."
+    
+    systemctl enable firewalld
+    systemctl start firewalld
+    
+    firewall-cmd --permanent --add-port=443/tcp
+    firewall-cmd --permanent --add-port=443/udp
+    firewall-cmd --permanent --add-port=8888/tcp
+    firewall-cmd --permanent --add-service=ssh
+    
+    firewall-cmd --reload
+    
+    print_info "CentOS firewall configured"
+}
+
+setup_ubuntu_firewall() {
+    print_info "Setting up Ubuntu firewall..."
+    
+    ufw --force enable
+    ufw allow ssh
+    ufw allow 443/tcp
+    ufw allow 443/udp
+    ufw allow 8888/tcp
+    
+    print_info "Ubuntu firewall configured"
+}
+
+# Detect OS and setup firewall
+if [ -f /etc/redhat-release ]; then
+    setup_centos_firewall
+elif [ -f /etc/debian_version ]; then
+    setup_ubuntu_firewall
+else
+    print_error "Unsupported OS"
+    exit 1
+fi
+
+print_info "Firewall setup completed"
