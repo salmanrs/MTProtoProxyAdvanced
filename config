@@ -1,0 +1,27 @@
+# MTProto Proxy Configuration File
+
+[server]
+port=443
+workers=4
+max-connections=1000
+
+[security]
+secret=auto-generated
+enable-encryption=true
+enable-masking=true
+
+[limits]
+max-users=100
+default-user-connections=20
+default-expire-time=2592000
+default-data-limit=1073741824
+
+[stats]
+enable=true
+port=8888
+update-interval=60
+
+[performance]
+tcp-nodelay=true
+tcp-fastopen=true
+enable-bbr=true
